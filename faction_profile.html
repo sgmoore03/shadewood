@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faction Dossier | Shadewood</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Lato:wght@400;700&display=swap');
+        body { font-family: 'Lato', sans-serif; background-color: #fdfbf7; color: #1f2937; }
+        h1, h2, h3, .header-font { font-family: 'Cinzel', serif; }
+        .chart-container { position: relative; width: 100%; max-width: 600px; margin: auto; height: 350px; }
+        .active-tab { background-color: #881337; color: white; border-color: #881337; }
+        .inactive-tab { background-color: white; color: #4b5563; border-color: #e5e7eb; }
+        .inactive-tab:hover { background-color: #fce7f3; color: #881337; }
+        .whitespace-pre-line { white-space: pre-line; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-stone-900 text-amber-50 shadow-lg border-b-4 border-red-900">
+        <div class="container mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center">
+            <div class="text-center md:text-left">
+                <h1 id="faction-name" class="text-3xl md:text-5xl font-bold tracking-wider uppercase text-red-600">Loading...</h1>
+                <p class="text-sm md:text-lg text-stone-400 mt-1 tracking-widest">Tactical Analysis Dossier</p>
+            </div>
+            <div class="text-center md:text-right mt-4 md:mt-0">
+                <a href="index.html" class="text-2xl font-bold header-font hover:text-red-500 transition">Shadewood</a>
+                <div class="text-xs uppercase tracking-widest text-stone-500">Official Database</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 py-8 space-y-12">
+        
+        <!-- Overview Section -->
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-1 space-y-4">
+                <h2 class="text-2xl font-bold text-stone-800 border-l-4 border-red-800 pl-3">Faction Overview</h2>
+                <p id="faction-flavor" class="text-stone-600 leading-relaxed"></p>
+                
+                <div class="bg-white p-6 rounded-lg shadow-md border-t-2 border-red-800">
+                    <h3 class="text-lg font-bold text-red-900 mb-4 header-font">Team Rule</h3>
+                    <div class="p-3 bg-red-50 rounded border border-red-100">
+                        <div id="team-rule-name" class="text-sm text-red-800 uppercase font-bold mb-1"></div>
+                        <div id="team-rule-desc" class="text-stone-800 text-sm"></div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                     <h3 class="text-lg font-bold text-stone-800 mb-4 header-font">Base Statistics</h3>
+                     <div class="grid grid-cols-2 gap-4 text-center">
+                        <div class="p-2 bg-stone-100 rounded"><div class="text-xs text-stone-500">HP</div><div id="stat-hp" class="text-xl font-bold"></div></div>
+                        <div class="p-2 bg-stone-100 rounded"><div class="text-xs text-stone-500">DEF</div><div id="stat-def" class="text-xl font-bold"></div></div>
+                        <div class="p-2 bg-stone-100 rounded"><div class="text-xs text-stone-500">ACC</div><div id="stat-acc" class="text-xl font-bold"></div></div>
+                        <div class="p-2 bg-stone-100 rounded"><div class="text-xs text-stone-500">MOVE</div><div id="stat-move" class="text-xl font-bold"></div></div>
+                     </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-2 bg-white p-6 rounded-lg shadow-md flex flex-col items-center justify-center">
+                <div class="text-center mb-4">
+                    <h3 class="text-xl font-bold text-stone-800 header-font">Combat Profile</h3>
+                </div>
+                <div class="chart-container"><canvas id="statsRadarChart"></canvas></div>
+            </div>
+        </section>
+
+        <!-- Unit Roster -->
+        <section id="roster" class="bg-white rounded-xl shadow-lg overflow-hidden border border-stone-200">
+            <div class="bg-stone-900 text-white p-4">
+                <h2 class="text-2xl font-bold header-font">Unit Roster</h2>
+                <p class="text-stone-400 text-sm">Select an operative to view detailed profiles.</p>
+            </div>
+            <div class="flex flex-col md:flex-row">
+                <div id="unit-list" class="w-full md:w-1/3 lg:w-1/4 bg-stone-100 border-r border-stone-200 p-4 space-y-2">
+                    <!-- Buttons generated by JS -->
+                </div>
+                <div id="unit-display-area" class="w-full md:w-2/3 lg:w-3/4 p-6 md:p-8 bg-white">
+                    <!-- Content generated by JS -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-stone-900 text-stone-500 py-6 text-center text-sm">
+        <p>&copy; 2024 Shadewood Game Data.</p>
+    </footer>
+
+    <!-- Load Data Engine -->
+    <script src="shadewood_data.js"></script>
+
+    <!-- Page Logic -->
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const factionId = urlParams.get('id') || 'brambleguard'; // Default fallback
+        const data = factionData[factionId];
+
+        // 1. Populate Header & Overview
+        if (data) {
+            document.getElementById('faction-name').innerText = data.name;
+            document.getElementById('faction-flavor').innerText = data.flavor;
+            document.getElementById('team-rule-name').innerText = data.teamRule.name;
+            document.getElementById('team-rule-desc').innerText = data.teamRule.desc;
+            document.getElementById('stat-hp').innerText = data.stats.hp;
+            document.getElementById('stat-def').innerText = data.stats.def;
+            document.getElementById('stat-acc').innerText = data.stats.acc;
+            document.getElementById('stat-move').innerText = data.stats.move;
+        } else {
+            document.body.innerHTML = "<h1 class='text-center mt-20 text-3xl'>Faction Not Found</h1>";
+        }
+
+        // 2. Initialize Radar Chart
+        const ctxRadar = document.getElementById('statsRadarChart').getContext('2d');
+        new Chart(ctxRadar, {
+            type: 'radar',
+            data: {
+                labels: ['Survivability', 'Armor', 'Melee', 'Ranged', 'Mobility'],
+                datasets: [{
+                    label: data.name,
+                    data: data.radar,
+                    backgroundColor: 'rgba(136, 19, 55, 0.4)',
+                    borderColor: 'rgba(136, 19, 55, 1)',
+                    pointBackgroundColor: '#fff',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                scales: { r: { suggestedMin: 0, suggestedMax: 10 } }
+            }
+        });
+
+        // 3. Roster Builder
+        const unitList = document.getElementById('unit-list');
+        const unitDisplay = document.getElementById('unit-display-area');
+
+        function renderUnitList() {
+            unitList.innerHTML = '<div class="text-xs font-bold text-stone-400 uppercase tracking-wider mb-2">Operatives</div>';
+            data.roster.forEach((unit, index) => {
+                const btn = document.createElement('button');
+                btn.className = `unit-btn w-full text-left px-4 py-3 rounded transition-colors duration-200 font-bold border ${index === 0 ? 'active-tab' : 'inactive-tab'}`;
+                btn.innerText = unit.name;
+                btn.onclick = () => loadUnit(index);
+                unitList.appendChild(btn);
+            });
+        }
+
+        function loadUnit(index) {
+            const unit = data.roster[index];
+            
+            // Highlight Button
+            document.querySelectorAll('.unit-btn').forEach((btn, i) => {
+                btn.className = `unit-btn w-full text-left px-4 py-3 rounded transition-colors duration-200 font-bold border ${i === index ? 'active-tab' : 'inactive-tab'}`;
+            });
+
+            // Rules Block
+            let activeRules = new Set();
+            unit.weapons.forEach(w => { if(w.sr !== "-" && ruleDefinitions[w.sr]) activeRules.add(w.sr); });
+            let rulesHTML = '';
+            if (activeRules.size > 0) {
+                rulesHTML = `<div class="mt-4 pt-4 border-t border-stone-200"><h5 class="text-xs font-bold text-stone-400 uppercase tracking-widest mb-2">Weapon Rules</h5><div class="space-y-2">`;
+                activeRules.forEach(rule => { rulesHTML += `<div class="flex items-start"><span class="inline-block bg-stone-100 text-stone-700 text-xs font-bold px-2 py-1 rounded mr-2 border border-stone-300">${rule}</span><span class="text-sm text-stone-600 italic">${ruleDefinitions[rule]}</span></div>`; });
+                rulesHTML += `</div></div>`;
+            }
+
+            // Weapon Table
+            let weaponRows = unit.weapons.map(w => `
+                <tr class="border-b border-stone-100 hover:bg-stone-50">
+                    <td class="py-3 px-2 font-bold text-stone-800">${w.name}</td>
+                    <td class="py-3 px-2 text-center w-12">${w.atk}</td>
+                    <td class="py-3 px-2 text-center w-12">${w.acc}</td>
+                    <td class="py-3 px-2 text-center w-16">${w.rng}</td>
+                    <td class="py-3 px-2 text-center w-16 font-mono text-red-700">${w.pwr}</td>
+                    <td class="py-3 px-2 text-center w-24 text-sm font-semibold text-stone-600">${w.sr}</td>
+                </tr>`).join('');
+
+            // Special Action
+            let specialHTML = unit.special ? `<div class="mt-4 p-4 bg-amber-50 rounded border-l-4 border-amber-500 shadow-sm"><h5 class="font-bold text-amber-800 text-sm uppercase mb-1">${unit.special.name} (${unit.special.cost} AL)</h5><p class="text-stone-700 text-sm whitespace-pre-line">${unit.special.desc}</p></div>` : '';
+
+            unitDisplay.innerHTML = `
+                <div class="animate-fade-in">
+                    <div class="flex justify-between items-start mb-6 border-b pb-4">
+                        <div>
+                            <h2 class="text-3xl font-bold header-font text-red-900">${unit.name}</h2>
+                            <div class="mt-2 flex gap-2">${unit.tags.map(tag => `<span class="text-xs text-stone-500 bg-stone-100 px-2 py-1 rounded-full border border-stone-200">${tag}</span>`).join('')}</div>
+                        </div>
+                        <div class="text-right"><div class="text-xs text-stone-400 uppercase font-bold">HP</div><div class="text-4xl font-bold text-stone-800 header-font">${unit.stats.hp}</div></div>
+                    </div>
+                     <div class="grid grid-cols-3 gap-6 mb-8 text-center">
+                        <div class="bg-stone-50 p-4 rounded border"><div class="text-xs font-bold text-stone-500">DEF</div><div class="text-2xl font-bold">${unit.stats.def}</div></div>
+                        <div class="bg-stone-50 p-4 rounded border"><div class="text-xs font-bold text-stone-500">ACC</div><div class="text-2xl font-bold">${unit.stats.acc}</div></div>
+                        <div class="bg-stone-50 p-4 rounded border"><div class="text-xs font-bold text-stone-500">MOVE</div><div class="text-2xl font-bold">${unit.stats.move}</div></div>
+                    </div>
+                    <div class="mb-8"><h4 class="text-lg font-bold border-b pb-2 mb-4 header-font">Abilities</h4>
+                        <div class="bg-red-50 p-4 rounded border-l-4 border-red-700"><h5 class="font-bold text-red-900 text-sm uppercase mb-1">${unit.ability.name}</h5><p class="text-stone-700 text-sm whitespace-pre-line">${unit.ability.desc}</p></div>
+                        ${specialHTML}
+                    </div>
+                    <div><h4 class="text-lg font-bold border-b pb-2 mb-4 header-font">Weapon Loadout</h4>
+                        <div class="w-full"><table class="w-full text-left text-sm table-fixed"><thead><tr class="text-stone-500 border-b"><th class="pb-2 text-xs">Profile</th><th class="pb-2 text-xs text-center w-12">ATK</th><th class="pb-2 text-xs text-center w-12">ACC</th><th class="pb-2 text-xs text-center w-16">RNG</th><th class="pb-2 text-xs text-center w-16">PWR</th><th class="pb-2 text-xs text-center w-24">SR</th></tr></thead><tbody>${weaponRows}</tbody></table></div>
+                        ${rulesHTML}
+                    </div>
+                </div>
+            `;
+        }
+
+        renderUnitList();
+        loadUnit(0);
+    </script>
+</body>
+</html>

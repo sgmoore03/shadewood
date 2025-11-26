@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadewood | Tactical Skirmish Wargame</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Lato:wght@400;700&display=swap');
+        body { font-family: 'Lato', sans-serif; background-color: #1c1917; color: #f5f5f4; }
+        .header-font { font-family: 'Cinzel', serif; }
+        .hero-bg {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1519074069444-1ba4fff66d16?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <!-- Hero Section -->
+    <section class="hero-bg h-screen flex flex-col justify-center items-center text-center px-4">
+        <h1 class="text-5xl md:text-8xl font-bold header-font text-red-600 mb-4 tracking-wider">SHADEWOOD</h1>
+        <p class="text-xl md:text-2xl text-stone-300 max-w-2xl mb-8">Fantasy creatures. Modern tactics. A skirmish wargame of brutal tactical depth.</p>
+        
+        <div class="flex flex-col md:flex-row gap-4">
+            <a href="factions.html" class="bg-red-700 hover:bg-red-600 text-white font-bold py-3 px-8 rounded transition duration-300 text-lg">
+                View Factions
+            </a>
+            <a href="rules.html" class="bg-transparent border-2 border-stone-400 hover:bg-stone-800 text-stone-200 font-bold py-3 px-8 rounded transition duration-300 text-lg">
+                Core Rules
+            </a>
+        </div>
+    </section>
+
+    <footer class="bg-black py-6 text-center text-stone-600 text-sm">
+        <p>&copy; 2024 Shadewood Wargame. All rights reserved.</p>
+    </footer>
+</body>
+</html>

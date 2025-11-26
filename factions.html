@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factions | Shadewood</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Lato:wght@400;700&display=swap');
+        body { font-family: 'Lato', sans-serif; background-color: #fdfbf7; }
+        .header-font { font-family: 'Cinzel', serif; }
+        .faction-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <header class="bg-stone-900 text-amber-50 py-6 border-b-4 border-red-900">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <h1 class="text-3xl font-bold header-font">Faction Database</h1>
+            <a href="index.html" class="text-sm uppercase tracking-widest hover:text-red-500">Back to Home</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Brambleguard -->
+            <a href="faction_profile.html?id=brambleguard" class="faction-card bg-white p-6 rounded-lg border border-stone-200 shadow transition-all block group">
+                <h3 class="text-2xl font-bold text-red-900 header-font mb-2 group-hover:text-red-600">The Brambleguard</h3>
+                <p class="text-stone-500 text-sm uppercase tracking-wide mb-4">Minotaurs</p>
+                <p class="text-stone-700">Powerhouse tank faction that controls the board with charge mechanics.</p>
+            </a>
+            <!-- Bloodthorn -->
+            <a href="faction_profile.html?id=bloodthorn" class="faction-card bg-white p-6 rounded-lg border border-stone-200 shadow transition-all block group">
+                <h3 class="text-2xl font-bold text-red-900 header-font mb-2 group-hover:text-red-600">Bloodthorn Court</h3>
+                <p class="text-stone-500 text-sm uppercase tracking-wide mb-4">Vampires</p>
+                <p class="text-stone-700">Aristocratic duelists who trade health for offensive power.</p>
+            </a>
+            <!-- Primal Wardens -->
+            <a href="faction_profile.html?id=primal" class="faction-card bg-white p-6 rounded-lg border border-stone-200 shadow transition-all block group">
+                <h3 class="text-2xl font-bold text-red-900 header-font mb-2 group-hover:text-red-600">Primal Wardens</h3>
+                <p class="text-stone-500 text-sm uppercase tracking-wide mb-4">Centaurs</p>
+                <p class="text-stone-700">Mobile skirmishers capable of shooting while moving at speed.</p>
+            </a>
+            <!-- Skydancers -->
+            <a href="faction_profile.html?id=skydancers" class="faction-card bg-white p-6 rounded-lg border border-stone-200 shadow transition-all block group">
+                <h3 class="text-2xl font-bold text-red-900 header-font mb-2 group-hover:text-red-600">Skydancers</h3>
+                <p class="text-stone-500 text-sm uppercase tracking-wide mb-4">Fairies</p>
+                <p class="text-stone-700">Fragile but agile flyers using teleportation networks.</p>
+            </a>
+             <!-- Rotcallers -->
+             <a href="faction_profile.html?id=rotcallers" class="faction-card bg-white p-6 rounded-lg border border-stone-200 shadow transition-all block group">
+                <h3 class="text-2xl font-bold text-red-900 header-font mb-2 group-hover:text-red-600">The Rotcallers</h3>
+                <p class="text-stone-500 text-sm uppercase tracking-wide mb-4">Myconids</p>
+                <p class="text-stone-700">Area control specialists who create zones of decay.</p>
+            </a>
+             <!-- Tinkerbright -->
+             <a href="faction_profile.html?id=tinkerbright" class="faction-card bg-white p-6 rounded-lg border border-stone-200 shadow transition-all block group">
+                <h3 class="text-2xl font-bold text-red-900 header-font mb-2 group-hover:text-red-600">The Tinkerbright</h3>
+                <p class="text-stone-500 text-sm uppercase tracking-wide mb-4">Gnomes</p>
+                <p class="text-stone-700">Tech geniuses using portals to outmaneuver foes.</p>
+            </a>
+             <!-- Wildkin -->
+             <a href="faction_profile.html?id=wildkin" class="faction-card bg-white p-6 rounded-lg border border-stone-200 shadow transition-all block group">
+                <h3 class="text-2xl font-bold text-red-900 header-font mb-2 group-hover:text-red-600">Wildkin Packs</h3>
+                <p class="text-stone-500 text-sm uppercase tracking-wide mb-4">Werewolves</p>
+                <p class="text-stone-700">Savage hunters who gain bonuses against wounded prey.</p>
+            </a>
+             <!-- Living Grove -->
+             <a href="faction_profile.html?id=livinggrove" class="faction-card bg-white p-6 rounded-lg border border-stone-200 shadow transition-all block group">
+                <h3 class="text-2xl font-bold text-red-900 header-font mb-2 group-hover:text-red-600">The Living Grove</h3>
+                <p class="text-stone-500 text-sm uppercase tracking-wide mb-4">Treants & Dryads</p>
+                <p class="text-stone-700">Symbiotic team where Dryads command massive Treants.</p>
+            </a>
+             <!-- Thornlings -->
+             <a href="faction_profile.html?id=thornlings" class="faction-card bg-white p-6 rounded-lg border border-stone-200 shadow transition-all block group">
+                <h3 class="text-2xl font-bold text-red-900 header-font mb-2 group-hover:text-red-600">The Thornlings</h3>
+                <p class="text-stone-500 text-sm uppercase tracking-wide mb-4">Goblins</p>
+                <p class="text-stone-700">Chaotic looters who find buffs by collecting treasure.</p>
+            </a>
+        </div>
+    </main>
+</body>
+</html>
