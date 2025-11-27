@@ -42,11 +42,26 @@
                 <h2 class="text-2xl font-bold text-stone-800 border-l-4 border-red-800 pl-3">Faction Overview</h2>
                 <p id="faction-flavor" class="text-stone-600 leading-relaxed"></p>
                 
+                <!-- New Team Composition Box -->
+                <div class="bg-white p-6 rounded-lg shadow-md border-t-2 border-red-800">
+                    <h3 class="text-lg font-bold text-red-900 mb-4 header-font">Team Composition</h3>
+                    <div class="grid grid-cols-1 gap-4">
+                        <div class="p-3 bg-stone-100 rounded">
+                            <div class="text-xs text-stone-500 uppercase font-bold">Leaders</div>
+                            <div id="comp-leaders" class="text-stone-800 font-bold"></div>
+                        </div>
+                        <div class="p-3 bg-stone-100 rounded">
+                            <div class="text-xs text-stone-500 uppercase font-bold">Operatives</div>
+                            <div id="comp-operatives" class="text-stone-800 font-bold"></div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="bg-white p-6 rounded-lg shadow-md border-t-2 border-red-800">
                     <h3 class="text-lg font-bold text-red-900 mb-4 header-font">Team Rule</h3>
                     <div class="p-3 bg-red-50 rounded border border-red-100">
                         <div id="team-rule-name" class="text-sm text-red-800 uppercase font-bold mb-1"></div>
-                        <div id="team-rule-desc" class="text-stone-800 text-sm"></div>
+                        <div id="team-rule-desc" class="text-stone-800 text-sm whitespace-pre-line"></div>
                     </div>
                 </div>
 
@@ -104,8 +119,24 @@
         if (data) {
             document.getElementById('faction-name').innerText = data.name;
             document.getElementById('faction-flavor').innerText = data.flavor;
+            
+            // New Team Composition Logic
+            if (data.comp) {
+                document.getElementById('comp-leaders').innerText = data.comp.leaders;
+                document.getElementById('comp-operatives').innerText = data.comp.operatives;
+            } else {
+                // Fallback if comp data is missing
+                document.getElementById('comp-leaders').innerText = "See Rules";
+                document.getElementById('comp-operatives').innerText = "See Rules";
+            }
+
             document.getElementById('team-rule-name').innerText = data.teamRule.name;
+            // Use innerHTML for Team Rule Desc to support markdown-like tables if needed, or just text
+            // Using innerText/textContent is safer if no HTML is expected, but whitespace-pre-line handles newlines
+            document.getElementById('team-rule-desc').innerHTML = marked.parse(data.teamRule.desc); // Optional: You'd need marked.js for full markdown.
+            // For now, sticking to textContent with CSS whitespace handling:
             document.getElementById('team-rule-desc').innerText = data.teamRule.desc;
+
             document.getElementById('stat-hp').innerText = data.stats.hp;
             document.getElementById('stat-def').innerText = data.stats.def;
             document.getElementById('stat-acc').innerText = data.stats.acc;
@@ -168,6 +199,12 @@
                 rulesHTML += `</div></div>`;
             }
 
+            // Secondary Ability
+            let secondaryAbilityHTML = '';
+            if (unit.secondaryAbility) {
+                secondaryAbilityHTML = `<div class="mt-2 pt-2 border-t border-red-200"><h5 class="font-bold text-red-900 text-sm uppercase mb-1">${unit.secondaryAbility.name}</h5><p class="text-stone-700 text-sm whitespace-pre-line">${unit.secondaryAbility.desc}</p></div>`;
+            }
+
             // Weapon Table
             let weaponRows = unit.weapons.map(w => `
                 <tr class="border-b border-stone-100 hover:bg-stone-50">
@@ -197,11 +234,29 @@
                         <div class="bg-stone-50 p-4 rounded border"><div class="text-xs font-bold text-stone-500">MOVE</div><div class="text-2xl font-bold">${unit.stats.move}</div></div>
                     </div>
                     <div class="mb-8"><h4 class="text-lg font-bold border-b pb-2 mb-4 header-font">Abilities</h4>
-                        <div class="bg-red-50 p-4 rounded border-l-4 border-red-700"><h5 class="font-bold text-red-900 text-sm uppercase mb-1">${unit.ability.name}</h5><p class="text-stone-700 text-sm whitespace-pre-line">${unit.ability.desc}</p></div>
+                        <div class="bg-red-50 p-4 rounded border-l-4 border-red-700"><h5 class="font-bold text-red-900 text-sm uppercase mb-1">${unit.ability.name}</h5><p class="text-stone-700 text-sm whitespace-pre-line">${unit.ability.desc}</p>${secondaryAbilityHTML}</div>
                         ${specialHTML}
                     </div>
                     <div><h4 class="text-lg font-bold border-b pb-2 mb-4 header-font">Weapon Loadout</h4>
-                        <div class="w-full"><table class="w-full text-left text-sm table-fixed"><thead><tr class="text-stone-500 border-b"><th class="pb-2 text-xs">Profile</th><th class="pb-2 text-xs text-center w-12">ATK</th><th class="pb-2 text-xs text-center w-12">ACC</th><th class="pb-2 text-xs text-center w-16">RNG</th><th class="pb-2 text-xs text-center w-16">PWR</th><th class="pb-2 text-xs text-center w-24">SR</th></tr></thead><tbody>${weaponRows}</tbody></table></div>
+                        
+                        <!-- SCROLLING WRAPPER FIX -->
+                        <div class="w-full overflow-x-auto pb-2">
+                            <table class="w-full text-left text-sm min-w-[600px]">
+                                <thead>
+                                    <tr class="text-stone-500 border-b">
+                                        <th class="pb-2 text-xs">Profile</th>
+                                        <th class="pb-2 text-xs text-center w-12">ATK</th>
+                                        <th class="pb-2 text-xs text-center w-12">ACC</th>
+                                        <th class="pb-2 text-xs text-center w-16">RNG</th>
+                                        <th class="pb-2 text-xs text-center w-16">PWR</th>
+                                        <th class="pb-2 text-xs text-center w-24">SR</th>
+                                    </tr>
+                                </thead>
+                                <tbody>${weaponRows}</tbody>
+                            </table>
+                        </div>
+                        <!-- END FIX -->
+
                         ${rulesHTML}
                     </div>
                 </div>
