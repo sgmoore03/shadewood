@@ -1,14 +1,21 @@
+const ruleDefinitions = {
+    "Blast 2": "Make a shooting attack with this profile against each enemy within 2 hexes of the main target (as long as there isn't a wall fully intervening).",
+    "AOE 2": "Make a shooting attack with this profile against each enemy within 2 hexes of the main target and is an eligible target to the shooter.",
+    "Align 1": "Re-roll 1 attack dice.",
+    "Stationary": "A unit cannot perform any movement actions before or after shooting this weapon, other than Roll."
+};
+
 const factionData = {
     // --- 1. THE BRAMBLEGUARD ---
     "brambleguard": {
         name: "The Brambleguard",
         species: "Minotaur",
-        flavor: "Powerhouse faction defined by high durability and aggressive crowd control.",
+        flavor: "Powerhouse faction defined by high durability and aggressive crowd control. Minotaurs use their bulk and charging mechanics to disrupt enemy lines.",
         stats: { hp: 16, def: 6, acc: "3+", move: 6, al: 3 },
         radar: [9, 8, 8, 4, 6],
         teamRule: {
             name: "Mess with the Bull, Get the Horns",
-            desc: "Charge deals d3+1 dmg and knocks back 1 hex. If blocked by terrain, d3+3 dmg. If blocked by unit, blocking unit takes d3."
+            desc: "Whenever a Minotaur charges an enemy unit, deal d3 + 1 damage and knock back that enemy unit 1 hex directly opposite of where the minotaur first entered REACH. The minotaur can choose to follow the enemy (move the 1 hex to stay within reach) or it can stop where its charge ended. \n\nIf you would end in REACH of two or more units, you can only select 1 to knock back. You can still follow that unit.\n\nIf the enemy unit cannot be fully moved due to terrain blocking a hex in the knockback path, that operative takes d3 + 3 damage instead. If another unit is occupying a hex that the knocked back unit would land on, that unit blocking the hex takes d3 damage and the knocked back unit doesn't move."
         },
         comp: {
             leaders: "Choose 1",
@@ -49,11 +56,11 @@ const factionData = {
             },
             {
                 id: "grenadier", name: "Bramble Grenadier", role: "Operative", tags: ["Grenadier", "Spotter"],
-                ability: { name: "AOE Specialist", desc: "Weapons utilize Blast 2 to hit multiple targets." },
+                ability: { name: "AOE Specialist", desc: "Make a shooting attack with this profile against each enemy within 2 hexes of the main target and is an eligible target to the shooter." },
                 special: { name: "Spot", cost: "1", desc: "Selects a visible enemy target to be spotted. When a friendly unit within 3 hexes of this unit is shooting a spotted enemy, its shooting weapons get lethal 5+. An enemy is no longer spotted if it's currently not visible to this unit, or until one of the following happens:\n- This unit is killed\n- This unit uses this action again\n- The next time this operative activates" },
                 stats: { hp: 16, def: 6, acc: "3+", move: 6, al: 3 },
                 weapons: [
-                    { name: "Bramble Bombs", atk: 4, acc: "3+", rng: "6", pwr: "2/4", sr: "Blast 2" },
+                    { name: "Bramble Bombs", atk: 4, acc: "3+", rng: "6", pwr: "2/4", sr: "AOE 2" },
                     { name: "Breaching Charges", atk: 4, acc: "3+", rng: "6", pwr: "5/6", sr: "-" },
                     { name: "Battle Axe", atk: 4, acc: "3+", rng: "Melee", pwr: "3/5", sr: "-" }
                 ]
@@ -159,7 +166,7 @@ const factionData = {
             { id: "herd", name: "Herd Chieftain", role: "Leader", tags: ["Leader"], ability: { name: "Relentless Pursuit", desc: "Galloping Shot can be used during a charge." }, special: { name: "Command", cost: "0", desc: "Once per battle, during this operative's activation, for free, you can command a friendly operative from your faction to complete 1 free Generic Action. If that action would make that friendly unit move, it can only move a maximum of 2 hexes." }, stats: { hp: 16, def: 6, acc: "3+", move: 7, al: 3 }, weapons: [{name: "Warden Rifle", atk: 4, acc: "3+", rng: 10, pwr: "3/5", sr: "-"}, {name: "Striking Hooves", atk: 4, acc: "3+", rng: "Melee", pwr: "3/4", sr: "-"}] },
             { id: "warden", name: "Warden Commander", role: "Leader", tags: ["Leader"], ability: { name: "Warden's Resolve", desc: "All Warden Rifles get the Align 1 rule." }, special: { name: "Command", cost: "0", desc: "Once per battle, during this operative's activation, for free, you can command a friendly operative from your faction to complete 1 free Generic Action. If that action would make that friendly unit move, it can only move a maximum of 2 hexes." }, stats: { hp: 16, def: 6, acc: "3+", move: 7, al: 3 }, weapons: [{name: "Warden Rifle", atk: 4, acc: "3+", rng: 10, pwr: "3/5", sr: "-"}, {name: "Striking Hooves", atk: 4, acc: "3+", rng: "Melee", pwr: "3/4", sr: "-"}] },
             { id: "lancer", name: "Thunder Lancer", role: "Operative", tags: ["Gunner Melta", "Tech Specialist"], ability: { name: "Got a Plan", desc: "This operative can use this ability to perform one mission or objective action for free, during its activation." }, special: null, stats: { hp: 16, def: 6, acc: "3+", move: 7, al: 3 }, weapons: [{name: "Thunder Lance", atk: 4, acc: "3+", rng: 6, pwr: "6/7", sr: "-"}, {name: "Warden Rifle", atk: 4, acc: "3+", rng: 10, pwr: "3/5", sr: "-"}, {name: "Striking Hooves", atk: 4, acc: "3+", rng: "Melee", pwr: "3/4", sr: "-"}] },
-            { id: "outrider", name: "Outrider Gunner", role: "Operative", tags: ["Gunner Plasma", "Gunner Rocket"], ability: { name: "Heavy Support", desc: "Mobile heavy weapons platform." }, special: null, stats: { hp: 16, def: 6, acc: "3+", move: 7, al: 3 }, weapons: [{name: "Skybreaker (Rocket)", atk: 4, acc: "3+", rng: 12, pwr: "2/5", sr: "Blast 2"}, {name: "Skybreaker (Plasma)", atk: 4, acc: "3+", rng: 12, pwr: "4/5", sr: "Align 1"}, {name: "Warden Rifle", atk: 4, acc: "3+", rng: 10, pwr: "3/5", sr: "-"}, {name: "Striking Hooves", atk: 4, acc: "3+", rng: "Melee", pwr: "3/4", sr: "-"}] },
+            { id: "outrider", name: "Outrider Gunner", role: "Operative", tags: ["Gunner Plasma", "Gunner Rocket"], ability: { name: "Heavy Support", desc: "Mobile heavy weapons platform." }, special: null, stats: { hp: 16, def: 6, acc: "3+", move: 7, al: 3 }, weapons: [{name: "Skybreaker (Rocket Launcher)", atk: 4, acc: "3+", rng: 12, pwr: "2/5", sr: "Blast 2"}, {name: "Skybreaker (Plasma)", atk: 4, acc: "3+", rng: 12, pwr: "4/5", sr: "Align 1"}, {name: "Warden Rifle", atk: 4, acc: "3+", rng: 10, pwr: "3/5", sr: "-"}, {name: "Striking Hooves", atk: 4, acc: "3+", rng: "Melee", pwr: "3/4", sr: "-"}] },
             { id: "shaman", name: "Primal Shaman", role: "Operative", tags: ["Spirit Healer"], ability: { name: "Healer", desc: "Supports the herd with magic." }, special: { name: "Ancestral Mending", cost: "1", desc: "Select a friendly unit within 6 hexes. For the next (2d3 + 2) activations, heal that friendly unit for 1 health.\n*Note: The friendly unit only needs to be within 6 hexes when this ability is cast.*" }, stats: { hp: 16, def: 6, acc: "3+", move: 7, al: 3 }, weapons: [{name: "Warden Rifle", atk: 4, acc: "3+", rng: 10, pwr: "3/5", sr: "-"}, {name: "Striking Hooves", atk: 4, acc: "3+", rng: "Melee", pwr: "3/4", sr: "-"}] },
             { id: "stampede", name: "Stampede Warrior", role: "Operative", tags: ["Generic Warrior"], ability: { name: "Trample", desc: "This operatives Warden Rifle has the Critical 5 when a shot is being made using the Galloping Shot rule." }, special: null, stats: { hp: 16, def: 6, acc: "3+", move: 7, al: 3 }, weapons: [{name: "Warden Rifle", atk: 4, acc: "3+", rng: 10, pwr: "3/5", sr: "-"}, {name: "Striking Hooves", atk: 4, acc: "3+", rng: "Melee", pwr: "3/4", sr: "-"}] }
         ]
@@ -307,11 +314,4 @@ const factionData = {
             { id: "greedy", name: "Greedy Scrapper", role: "Operative", tags: ["Generic Warrior"], ability: { name: "Lucky Find", desc: "This operative always succeeds in finding treasure (this is for \"looking for treasure\" or mission objective actions)" }, special: null, stats: { hp: 7, def: 4, acc: "4+", move: 6, al: 2 }, weapons: [{name: "Scrap Pistol", atk: 4, acc: "4+", rng: 10, pwr: "2/4", sr: "-"}, {name: "Rusty Blade", atk: 4, acc: "4+", rng: "Melee", pwr: "4/5", sr: "-"}] }
         ]
     }
-};
-
-const ruleDefinitions = {
-    "Blast 2": "Make a shooting attack with this profile against each enemy within 2 hexes of the main target (as long as there isn't a wall fully intervening).",
-    "AOE 2": "Make a shooting attack against each eligible enemy within 2 hexes of the main target.",
-    "Align 1": "Re-roll 1 attack die.",
-    "Stationary": "Cannot move before or after shooting (except Roll)."
 };
