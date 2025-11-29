@@ -328,5 +328,3 @@ const factionData = {
         ]
     }
 };
-};
-
